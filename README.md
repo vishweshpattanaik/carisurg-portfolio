@@ -31,6 +31,37 @@ The third task involved creating two clinical visualisations from the triage dat
 **Skills used:** Python, pandas, matplotlib, data visualisation, clinical reference lines
 
 ---
+### Assignment 4 — Clinical Context: Diastolic Blood Pressure
+
+A plain language explanation of Diastolic Blood Pressure was written covering what it measures, what the normal range looks like and why a triage nurse would care. Normal DBP sits between 60 and 80 mmHg. Below 60 can indicate hypotension or shock and above 90 can indicate hypertension which increases the risk of stroke and heart attack.
+
+**Skills used:** Clinical literacy, technical writing
+
+---
+
+### Assignment 5 — Metrics Not in the Dataset
+
+A short write-up identifying important clinical metrics missing from the dataset. Key metrics identified include SpO2 for blood oxygen saturation, pain score, and the Glasgow Coma Scale. Caribbean specific indicators such as dengue fever markers and recent travel history were also flagged as valuable additions given the regional health context.
+
+**Skills used:** Clinical literacy, critical thinking, Caribbean health context
+
+---
+
+### Assignment 6 — At-Risk Patient Logic
+
+A rule-based algorithm was designed to flag patients as at-risk based on vital sign thresholds aligned with WHO emergency triage guidelines. The algorithm checks pulse, temperature, respiratory rate, systolic blood pressure and DBP. If any single vital sign falls outside the normal range the patient is flagged as at-risk. DBP was included to connect directly to the cleaning and visualisation work in Assignments 2 and 3.
+
+**Skills used:** Python, pseudocode, clinical logic, algorithm design
+
+---
+
+### Assignment 7 — Final Notebook and Career Slide Deck
+
+All tasks from the week were combined into a single documented Jupyter notebook and pushed to this repository. A career slide deck on time management for MedTech students was also submitted covering a two week time audit, a proposed weekly schedule for Weeks 1 to 12, and a triage inspired prioritisation framework.
+
+**Skills used:** Python, Jupyter, GitHub, time management, presentation
+
+---
 
 ## Tools and Libraries
 
