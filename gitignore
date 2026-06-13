@@ -1,0 +1,42 @@
+# Byte-compiled / optimised / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# Google Colab
+.config/
+sample_data/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+
+# Environment variables and secrets
+.env
+*.env
+secrets.*
+
+# Data files (no real patient data in version control)
+data/*.csv
+data/*.xlsx
+data/*.parquet
+!data/README.md
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
