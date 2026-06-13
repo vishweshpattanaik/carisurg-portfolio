@@ -20,7 +20,7 @@ Clinical reviewers, programme tutors, and colleagues in the Clinical AI & Innova
 
 1. Clone the repository:
    ```
-   git clone https://github.com/<your-username>/carisurg-portfolio.git
+   git clone https://github.com/vishwesh-pattanaik/carisurg-portfolio.git
    cd carisurg-portfolio
    ```
 2. Create a virtual environment and install dependencies:
