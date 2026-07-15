@@ -1,45 +1,99 @@
-# carisurg-portfolio
+# CariSurg MedTech Pathways 2026 — Portfolio
+**Name:** Vishwesh Pattanaik  
+**Programme:** CariSurg MedTech Pathways 2026  
+**Hospital:** Mercer General Hospital — Clinical AI & Innovation Unit
 
-Portfolio of work completed during the **CariSurg MedTech Pathways** clinical AI programme, in the role of Clinical AI Engineer trainee within the Clinical AI & Innovation Unit at Mercer General Hospital.
+**Project:** An AI-assisted triage tool for middle-acuity patients in a Caribbean emergency department. The middle band (ESI 3) is the biggest group coming through the door and the one triage sorts worst. The aim is to flag the patients in that band who need moving up, validate it on local data, and shadow-test it against the nurses before it touches a single decision.
 
-The focus of the early work is **AI-assisted emergency triage** for a Caribbean emergency department setting.
+---
 
-## Who this is for
+## Week 0 — Data Exploration and Cleaning
 
-Clinical reviewers, programme tutors, and colleagues in the Clinical AI & Innovation Unit who want to understand, reproduce, or audit the work. No deep technical background is assumed.
+Cleaned a raw emergency triage dataset from Mercer General's ED. The Gender column held inconsistent entries (Male, MALE, Female, FEMALE, 0, 1) and was mapped to integers. The Diastolic Blood Pressure column had 22 missing values and clinically invalid entries, 8 below 40 mmHg and 29 above 120 mmHg. Invalid values were replaced with NaN and imputed with the median to avoid skewing on the extremes. Two clinical visualisations followed: a DBP histogram with hypotension and hypertension reference lines, and a DBP against age scatter plot. A plain language write-up on what DBP means and why a triage nurse cares. A list of metrics missing from the dataset, including SpO2, pain score, Glasgow Coma Scale, and Caribbean specific indicators like dengue markers. Finally a rule-based algorithm that flags a patient as at-risk if any vital sign falls outside the WHO normal range.
 
-## What is in here
+**Skills used:** Python, pandas, matplotlib, Google Colab, data cleaning, clinical literacy, algorithm design
 
-| Folder | Contents |
-| --- | --- |
-| `notebooks/` | Week 0 exploratory data analysis on emergency triage data: cleaning, basic logic, and visualisation. |
-| `docs/` | Week 1 memo and proposal on AI-assisted emergency triage for a Caribbean ED. |
-| `data/` | Placeholder for the Week 0 dataset. No real patient data is committed (see `data/README.md`). |
+---
 
-## How to run the notebook
+## Week 1 — Preliminary Proposal
 
-1. Clone the repository:
-   ```
-   git clone https://github.com/vishwesh-pattanaik/carisurg-portfolio.git
-   cd carisurg-portfolio
-   ```
-2. Create a virtual environment and install dependencies:
-   ```
-   python -m venv .venv
-   source .venv/bin/activate    # Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-3. Launch Jupyter and open the notebook in `notebooks/`:
-   ```
-   jupyter notebook
-   ```
+Wrote the first proposal. Problem statement, literature review, identified gaps, and a four-phase solution. The two gaps that drive the whole project: every AI triage model in the literature is validated on a single well-resourced site, and almost none are tested prospectively at the bedside. Neither has been done in a Caribbean ED.
 
-The notebook can also be opened directly in Google Colab.
+**Skills used:** Research literacy, technical writing, gap analysis
+
+---
+
+## Week 2 — Project Setup and Documentation
+
+Set up this repository properly. README, LICENSE, .gitignore, requirements.txt, and a branch to pull request to merge cycle. Built a Zotero library and regenerated the proposal so no citation is typed by hand.
+
+**Skills used:** Git, GitHub, Zotero, technical documentation
+
+---
+
+## Week 3 — Workflow and Systems Thinking
+
+Mapped the current ED triage process from door to disposition in Mermaid, and marked five points where an AI tool could plausibly sit. Points 2 and 3, flagging likely up-triage at assessment and re-scoring middle-band patients while they wait, are the core of this project. Named three workflow constraints any design has to respect: vitals go on paper before the EHR, triage runs under constant interruption, and vitals capture is often incomplete. Mapped five clinical stakeholders and what each actually cares about.
+
+**Skills used:** Mermaid, systems thinking, stakeholder analysis
+
+---
+
+## Week 4 — Ethics, Safety and Risk
+
+Built a 12-risk register across AI-technical, operational, ethical and equity categories, each with a likelihood, an impact, a mitigation, and a signal that tells you the mitigation is working. Root-caused a real AI harm case: the Epic Sepsis Model, deployed to hundreds of US hospitals, which on independent validation scored an AUC of 0.63, missed two thirds of sepsis cases, and ran at 12% precision until staff learned to ignore it. Four root causes, and every one of them maps onto a risk in the register.
+
+**Skills used:** Risk analysis, responsible AI, critical appraisal
+
+---
+
+## Week 5 — Data Exploration
+
+Profiled the Yale ED dataset: 55,121 patients, 226 columns, 200 of them one-hot chief-complaint flags. ESI 3 is 49% of arrivals, which is the project premise confirmed in the data. Not one missing cell anywhere, which sounds good and is not. This is the processed release, so the vitals were imputed and the complaints encoded before it reached me, and Mercer's own extract will not look like this. Wrote a three-page feasibility memo for the ED Board and a top-10 feature shortlist ranked on correlation and clinical sense.
+
+**Skills used:** pandas, matplotlib, EDA, data quality assessment, clinical reasoning
+
+---
+
+## Week 6 — Baseline Models
+
+Trained two baselines and compared them against a stratified random guess.
+
+| Model | Accuracy | Macro F1 | ESI-1 recall |
+| --- | --- | --- | --- |
+| Random guess | 0.375 | 0.204 | 0.00 |
+| Logistic regression | 0.685 | 0.518 | 0.25 |
+| Decision tree (depth 6) | 0.560 | 0.226 | 0.00 |
+| Logistic regression (class-weighted) | 0.585 | 0.428 | 0.69 |
+
+It beats the coin flip, so the signal is real. That is not the number that matters. Recall on ESI 1 is 0.25, meaning the model catches one in four of the sickest patients and sends the other three to wait. Class weighting takes that to 0.69 but costs accuracy, and that trade is the Board's call, not the model's. Also went past the standard evaluation: split every prediction into over-triage against under-triage, bootstrapped a confidence interval on ESI-1 recall (0.06 to 0.50, because there are only 16 of them in the test set), and checked the coefficients point the way physiology says they should. They do.
+
+**Skills used:** scikit-learn, logistic regression, decision trees, model evaluation, bootstrap, clinical communication
+
+---
+
+## Reproducibility
+
+- **Random seed: 42.** Every split, model fit, dummy baseline and bootstrap.
+- **Split:** 80/20, stratified on `esi`.
+- `disposition` is excluded from the features. It is the outcome, known only after triage, so using it leaks the answer.
 
 ## Data
 
-The dataset is not included in this repository for privacy reasons. The expected file and its location are described in `data/README.md`.
+No patient data is in this repository. Datasets are git-ignored for size and sensitivity. See `data/README.md` for the expected file and where it goes. The notebooks read from `data/`. In Colab, mount Drive and point `read_csv` at your copy.
+
+## Tools and Libraries
+
+- Python 3.10
+- pandas
+- numpy
+- matplotlib
+- scikit-learn
+- Google Colab
+- Git and GitHub
+- Zotero
+- Mermaid
 
 ## Licence
 
-Released under the MIT Licence. See `LICENSE`.
+MIT. See `LICENSE`.
