@@ -72,6 +72,24 @@ It beats the coin flip, so the signal is real. That is not the number that matte
 
 ---
 
+## Week 7 — Optimisation and Trade-offs
+
+Trained a more complex model and then recommended against it. Reused the exact Week 6 split (seed 42) and benchmarked three base models on six axes plus interpretability.
+
+| Model | Accuracy | Macro F1 | ESI-1 recall | Inference (ms/pred) | Explainable? |
+| --- | --- | --- | --- | --- | --- |
+| Logistic regression | 0.685 | 0.518 | 0.250 | 0.003 | Yes, per patient |
+| Decision tree (d=6) | 0.560 | 0.226 | 0.000 | 0.001 | Path, but weak |
+| XGBoost | 0.693 | 0.470 | 0.062 | 0.034 | No, needs SHAP |
+
+Picked the candidates from the shape of the data, not at random: wide sparse tabular features, an imbalanced 5-level target, and a hard need for per-patient explanations. That points to logistic regression and gradient-boosted trees, which is also what the published triage models use. Deep learning was ruled out as unnecessary here and not interpretable.
+
+XGBoost wins overall accuracy by less than a point but is worse on the numbers that matter for triage safety (macro F1 and recall on the sickest patients), costs about 11x the inference time per prediction, and cannot explain a single decision at the bedside. Decision: keep logistic regression for Phase 3, with class weighting to lift recall on the urgent classes. Choosing the right model is a decision, not a default.
+
+**Skills used:** scikit-learn, XGBoost, model benchmarking, engineering trade-off analysis, technical writing
+
+---
+
 ## Reproducibility
 
 - **Random seed: 42.** Every split, model fit, dummy baseline and bootstrap.
@@ -89,6 +107,7 @@ No patient data is in this repository. Datasets are git-ignored for size and sen
 - numpy
 - matplotlib
 - scikit-learn
+- XGBoost
 - Google Colab
 - Git and GitHub
 - Zotero
