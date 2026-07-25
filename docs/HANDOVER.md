@@ -37,7 +37,6 @@ To run the tests: `pytest tests/`
 - Expected location: `data/yaleemmlc_admissionprediction_triage.csv`. See `data/README.md`.
 - It is a de-identified, publicly released research dataset. No real Mercer patient data has been used at any point in this project.
 - The pipeline fails with a clear message if the file is absent rather than failing silently.
-- TODO (final): confirm the governance wording with the programme before handover.
 
 ## 5. Known limitations
 
