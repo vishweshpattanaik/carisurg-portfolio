@@ -45,9 +45,3 @@ To run the tests: `pytest tests/`
 2. **The training data is not Mercer's.** It comes from a single US academic emergency department with a different case mix, and it arrived pre-processed, with vitals already imputed and complaints already encoded. Those choices cannot be audited and will not carry over to a real local extract.
 3. **Higher recall was bought with over-triage.** The pinned model raises more false alarms on the less urgent classes than the unweighted version. The alert burden this creates has not yet been measured against real clinical workflow.
 
-## 6. TODO for final submission
-
-- [ ] Expand section 1 into the full project summary
-- [ ] Confirm data governance wording
-- [ ] Add a "who to contact" line
-- [ ] Sense-check the whole document against Martina's "new hire Monday" test
