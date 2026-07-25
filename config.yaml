@@ -1,0 +1,46 @@
+# CariSurg triage model - single source of truth for training.
+# Change values here, not in the code.
+
+data:
+  path: data/yaleemmlc_admissionprediction_triage.csv
+  target: esi                 # Emergency Severity Index, 1 = most urgent
+  # Dropped on purpose: 'disposition' is the outcome, known only after triage.
+  # Including it would leak the answer into the features.
+  drop_columns:
+    - disposition
+    - "Unnamed: 0"
+
+features:
+  numeric:
+    - age
+    - triage_vital_hr
+    - triage_vital_sbp
+    - triage_vital_dbp
+    - triage_vital_rr
+    - triage_vital_o2
+    - triage_vital_temp
+    - triage_glucose
+    - triage_vital_o2_device
+  categorical:
+    - gender
+    - arrivalmode
+  complaint_prefix: cc_        # 200 one-hot chief-complaint flags
+
+split:
+  test_size: 0.2
+  stratify: true
+  seed: 42
+
+# PINNED MODEL (Week 7 decision, see docs/decision-journal.md entry 4)
+# Logistic regression with balanced class weights. Chosen over XGBoost because
+# it catches far more ESI-1 patients and can explain a single prediction.
+model:
+  name: logistic_regression
+  params:
+    max_iter: 2000
+    class_weight: balanced
+    random_state: 42
+
+output:
+  model_path: artifacts/model.joblib
+  metrics_path: artifacts/metrics.json
