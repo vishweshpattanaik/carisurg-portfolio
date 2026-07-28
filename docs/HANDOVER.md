@@ -1,4 +1,4 @@
-# # Handover Document
+# Handover Document
 
 ## 1. What this project is
 
