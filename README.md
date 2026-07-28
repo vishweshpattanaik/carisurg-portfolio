@@ -7,6 +7,42 @@
 
 ---
 
+## Quickstart
+
+The dataset is not included in this repository (it is git-ignored for size and sensitivity). Supply your own copy, then:
+
+```bash
+# 1. clone and enter
+git clone https://github.com/vishweshpattanaik/carisurg-portfolio.git
+cd carisurg-portfolio
+
+# 2. environment
+python -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+
+# 3. place the dataset here (name must match config.yaml):
+#    data/yaleemmlc_admissionprediction_triage.csv
+#    if your file is named differently, change data.path in config.yaml
+
+# 4. train the pinned model
+python scripts/train.py --config config.yaml
+```
+
+This prints accuracy, macro F1, ESI-1 recall and under-triage rate, and writes the model to `artifacts/model.joblib` and metrics to `artifacts/metrics.json`.
+
+```bash
+# reproduce the full model comparison table
+python scripts/compare_models.py --config config.yaml
+
+# run the tests
+pytest tests/
+```
+
+If the data is missing or has the wrong columns, the pipeline stops with a clear message rather than failing silently. Everything that can be changed (seed, split, features, model) lives in `config.yaml`, not in the code.
+
+---
+
 ## Week 0 — Data Exploration and Cleaning
 
 Cleaned a raw emergency triage dataset from Mercer General's ED. The Gender column held inconsistent entries (Male, MALE, Female, FEMALE, 0, 1) and was mapped to integers. The Diastolic Blood Pressure column had 22 missing values and clinically invalid entries, 8 below 40 mmHg and 29 above 120 mmHg. Invalid values were replaced with NaN and imputed with the median to avoid skewing on the extremes. Two clinical visualisations followed: a DBP histogram with hypotension and hypertension reference lines, and a DBP against age scatter plot. A plain language write-up on what DBP means and why a triage nurse cares. A list of metrics missing from the dataset, including SpO2, pain score, Glasgow Coma Scale, and Caribbean specific indicators like dengue markers. Finally a rule-based algorithm that flags a patient as at-risk if any vital sign falls outside the WHO normal range.
@@ -90,28 +126,38 @@ XGBoost wins overall accuracy by less than a point but is worse on the numbers t
 
 ---
 
+## Week 8 — Reproducibility and Packaging
+
+Refactored the whole project out of notebooks into a modular, config-driven codebase that a stranger can clone and run. One `config.yaml` drives everything (seed, split, features, model), `scripts/train.py` is the single entry point, the logic lives in `src/` split by job (data, features, model, utils), and `tests/` proves the pipeline still works. The notebooks stay as a record of the exploration, not the source of truth. Added a handover document, a model-selection audit trail regenerable from one script, and a running decision journal.
+
+```
+carisurg-portfolio/
+├── config.yaml            one file drives training
+├── scripts/train.py       entry point
+├── src/                   data.py, features.py, model.py, utils.py
+├── tests/                 pipeline and schema tests
+├── docs/                  proposal, memos, risk register, decisions, handover
+└── notebooks/             exploration only, not the solution
+```
+
+**Skills used:** software engineering, refactoring, pytest, YAML config, reproducibility, technical documentation
+
+---
+
 ## Reproducibility
 
 - **Random seed: 42.** Every split, model fit, dummy baseline and bootstrap.
 - **Split:** 80/20, stratified on `esi`.
 - `disposition` is excluded from the features. It is the outcome, known only after triage, so using it leaks the answer.
+- Package versions are pinned in `requirements.txt`.
 
 ## Data
 
-No patient data is in this repository. Datasets are git-ignored for size and sensitivity. See `data/README.md` for the expected file and where it goes. The notebooks read from `data/`. In Colab, mount Drive and point `read_csv` at your copy.
+No patient data is in this repository. Datasets are git-ignored for size and sensitivity. See `data/README.md` for the expected file and where it goes. The pipeline reads from `data/`. In Colab, mount Drive and point `read_csv` at your copy.
 
 ## Tools and Libraries
 
-- Python 3.10
-- pandas
-- numpy
-- matplotlib
-- scikit-learn
-- XGBoost
-- Google Colab
-- Git and GitHub
-- Zotero
-- Mermaid
+Python 3.10, pandas, numpy, matplotlib, scikit-learn, XGBoost, PyYAML, joblib, pytest, Google Colab, Git and GitHub, Zotero, Mermaid.
 
 ## Licence
 
