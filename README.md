@@ -18,7 +18,7 @@ cd carisurg-portfolio
 
 # 2. environment
 python -m venv .venv
-source .venv/bin/activate        # Windows: .venv\Scripts\activate
+.venv\Scripts\activate (windows)
 pip install -r requirements.txt
 
 # 3. place the dataset here (name must match config.yaml):
